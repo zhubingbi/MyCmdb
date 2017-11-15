@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Basic Embedding Gate One</title>
+    <script src="/static/js/gateone.js"></script>
+    <script>
+      window.onload = function() {
+          // Initialize Gate One:
+          GateOne.init({url: 'https://127.0.0.1'});
+      }
+    </script>
+  </head>
+  <body>
+<div>主控端终端登录</div>
+<!-- Decide where you want to put Gate One -->
+    <div id="gateone_container" style="position: relative; width: 60em; height: 30em;">
+        <div id="gateone"></div>
+    </div>
+  </body>
+</html>

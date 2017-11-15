@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    修改用户信息
+{% endblock %}
+
+{% block content %}
+    <table class = 'table table-bordered col-md-8'>
+        <thead style="text-align: center;">
+            <th> 用户名 </th>
+            <th> 注册电话 </th>
+            <th> 注册邮箱 </th>
+            <th> 出生日期 </th>
+            <th> 用户业务分组 </th>
+            <th> 是否是管理员 </th>
+            <th> 修改按钮 </th>
+        </thead>
+        <tbody>
+            {% for user in userList %}
+                <tr>
+                    <td> {{ user.user }} </td>
+                    <td> {{ user.phone }} </td>
+                    <td> {{ user.email }} </td>
+                    <td> {{ user.birthday }} </td>
+                    <td> {{ user.groups }} </td>
+                    <td> {{ user.isadmin }} </td>
+                    <td>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#connection" onclick="getValue({{ user.id }})">
+                                修改用户信息
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 提交修改模态框 -->
+    <div id="connection" class="modal fade" tabindex = '1' role="dialog" aria-labelledby="myModalLabel">
+        <div class = 'modal-dialog' role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type = 'button' class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"> x </span>
+                    </button>
+                    <h4 class = 'modal-title' id="myModalLabel">修改用户信息</h4>
+                </div>
+                <div class = 'modal-body'>
+                    <input id="username" class="form-control" type="text" placeholder="修改用户名" name="username">
+                    <br>
+                    <input id="userpasswd" class="form-control" type="password" placeholder="修改密码" name="userpasswd">
+                    <br>
+                    <input id="userphone" class="form-control" type="text" placeholder="修改注册手机" name="userphone">
+                    <br>
+                    <input id="useremail" class="form-control" type="text" placeholder="修改注册邮箱" name="useremail">
+                    <br>
+                    <input id="userbirthday" class="form-control" type="text" placeholder="修改出生日期YY-MM-DD" name="userbirthday">
+                    <br>
+                    <input id="usergroups" class="form-control" type="text" placeholder="修改用户业务分组" name="usergroups">
+                    <br>
+                    <input id="userisadmin" class="form-control" type="text" placeholder="修改admin权限" name="userisadmin">
+                    <br>
+                    <button id="modify" class="btn btn-warning pull-right">提交修改</button>
+                    <br>
+                    <br>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function getValue(id) {
+            $('#modify').click (
+                function () {
+                    modify_name = $('#username').val();
+                    console.log(modify_name);
+                    modify_passwd = $('#userpasswd').val();
+                    modify_phone = $('#userphone').val();
+                    modify_email = $('#useremail').val();
+                    modify_birthday = $('#userbirthday').val();
+                    modify_groups = $('#usergroups').val();
+                    modify_isadmin = $('#userisadmin').val();
+                    var sendData = {
+                        'modify_name':modify_name,
+                        'modify_passwd':modify_passwd,
+                        'modify_phone':modify_phone,
+                        'modify_email':modify_email,
+                        'modify_birthday':modify_birthday,
+                        'modify_groups':modify_groups,
+                        'modify_isadmin':modify_isadmin,
+                        'id':id
+                    };
+                    $.ajax(
+                        {
+                            url:'/user/modifyinput/',
+                            type:'POST',
+                            data:sendData,
+                            success:function (data) {
+                                $('#connection').modal('hide');
+                                alert('修改成功！');
+                                window.location.reload();
+                            },
+                            error:function (error) {
+                                console.log(error)
+                                alert('修改失败，请与管理员联系！');
+                            }
+                        }
+                    )
+                }
+            )
+        }
+    </script>
+{% endblock %}

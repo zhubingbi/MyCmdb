@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block style %}
+    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    do command
+{% endblock %}
+
+{% block content %}
+    <input id="command" type = 'text' >
+    <button id = 'doResult' class = 'btn-primary'> 执行 </button>
+    <div id = 'result'>
+
+    </div>
+    <script>
+       $(
+            function(){
+                $("#doResult").click(
+                     function () {
+                        var command = $("#command").val();
+                        if(command){
+                    $.ajax(
+                         {
+                             url:"/server/exec/exec_cmd/?cmd="+command,
+                             type:"get",
+                             data:"",
+                             success:function (data) {
+                                 var result = data["data"];
+                                 console.log(result);
+
+                                 for(var res in result){
+                                    $('#result').append('<p>'+result[res]+'</p>')
+                                 }
+                             },
+                             error:function (err) {
+                                 console.log(err)
+                             }
+                         }
+
+                    )
+                }
+                     }
+                );
+
+            }
+        )
+    </script>
+{% endblock %}

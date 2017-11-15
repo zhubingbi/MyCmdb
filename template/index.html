@@ -1,0 +1,46 @@
+<!-- 首页html -->
+{% extends "base.html" %}
+
+{% block style %}
+    <link href = "/static/css/index.css" rel = "stylesheet" type = "text/css">
+    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    首页
+{% endblock %}
+
+{% block label %}
+    <img class="img-circle" style="width:80px; height:80px" src="/static/img/uploadImg/{{ user.photo }}">
+{% endblock %}
+
+{% block content %}
+    <table class = 'table table-bordered col-md-8'>
+        <tbody style="text-align: center;">
+            <tr>
+                <th>姓名</th>
+                <td>{{user.user}}</td>
+                <th>性别</th>
+                <td> 男 </td>
+                <th>年龄</th>
+                <td>18</td>
+            </tr>
+            <tr>
+                <th>电话</th>
+                <td>{{user.phone}}</td>
+                <th>职务</th>
+                <td> 运维工程师 </td>
+                <th>负责业务</th>
+                <td> 网站、系统运维 </td>
+            </tr>
+            <tr>
+                <th colspan="6" style="text-align: center;">个人简介</th>
+            </tr>
+            <tr>
+                <th colspan="6">
+                    先生如万年芳草，可以傲霜雪，却不可为栋梁！
+                </th>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

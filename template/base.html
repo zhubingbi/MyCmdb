@@ -1,0 +1,215 @@
+<!-- base html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>
+        {% block title %}
+            联众互动管理平台
+        {% endblock %}
+    </title>
+
+    <link rel="icon" type="text/icon" href="../static/img/favicon.ico">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/static/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/static/vendor/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% block style%}
+
+    {% endblock %}
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index">联众互动管理</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span>
+                        用户 {{ user.user }} 欢迎登录
+                        </span>
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/index/"><i class="fa fa-gear fa-fw"></i> 个人中心</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/logout/"><i class="fa fa-sign-out fa-fw"></i> 登出</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a href="#"><i class="glyphicon glyphicon-user"></i> 用户管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/user/listUser/">用户列表</a>
+                                </li>
+                                <li>
+                                    <a href="/user/addUser/">添加用户</a>
+                                </li>
+                                <li>
+                                    <a href="/user/modifyUser/">修改用户信息</a>
+                                </li>
+
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="	glyphicon glyphicon-wrench"></i> Ansible <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/ansible/hostlist/">主机信息</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">应用部署</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">命令执行</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">部署记录</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">命令历史记录</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">文件分发</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">文件下载</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">代码发布</a>
+                                </li>
+
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="glyphicon glyphicon-tasks"></i> 服务器管理 <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/server/serverlist/">服务器列表</a>
+                                </li>
+                                <li>
+                                    <a href="/server/upload">上传文件</a>
+                                </li>
+                                <li>
+                                    <a href="/server/gateone/"> 终端登录 </a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">下载文件列表</a>
+                                </li>
+
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="glyphicon glyphicon-random"></i> 接口管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="flo.html">接口列表</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        {% block label %}
+                            <img class="img-circle" style="width:80px; height:80px" src="/static/img/uploadImg/{{ user.photo }}">
+                        {% endblock %}
+                    </h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+            <!-- /.row -->
+            <div class = "row">
+                {% block content %}
+
+                {% endblock %}
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/static/vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="/static/vendor/raphael/raphael.min.js"></script>
+    <script src="/static/vendor/morrisjs/morris.min.js"></script>
+    <script src="/static/data/morris-data.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/static/dist/js/sb-admin-2.js"></script>
+
+</body>
+
+</html>

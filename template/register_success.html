@@ -1,0 +1,19 @@
+
+<div>
+    用户注册成功！<br />
+    <p style="font-size: 14px;"><i id="timeTipBoxID">4</i>秒后自动跳转，或点击自动跳转！</p>
+</div>
+
+<script language="JavaScript" type="text/javascript">
+    function delayURL(url) {
+        var delay = document.getElementById("timeTipBoxID").innerHTML;
+        if(delay > 1) {
+            delay--;
+            document.getElementById("timeTipBoxID").innerHTML = delay;
+        } else {
+            window.top.location.href = url;
+        }
+        setTimeout("delayURL('" + url + "')", 1000);
+    }
+    delayURL("/user/listUser");
+</script>

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    服务器列表
+{% endblock %}
+
+
+{% block content %}
+    <table class = 'table table-bordered col-md-8'>
+        <thead style="text-align: center;">
+            <th> 主机名 </th>
+            <th> IP地址 </th>
+            <th> 系统 </th>
+            <th> 弹性伸缩 </th>
+        </thead>
+        <tbody>
+            {% for server in serverList %}
+                <tr>
+                    <td> {{ server.hostname }} </td>
+                    <td> {{ server.ip }} </td>
+                    <td> {{ server.sys }} </td>
+                    <td>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#connection" onclick="getValue({{ server.id }})">
+                                执行分发
+                            </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

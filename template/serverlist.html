@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    服务器列表
+{% endblock %}
+
+{% block content %}
+    <table class = 'table table-bordered col-md-8'>
+        <thead style="text-align: center;">
+            <th> 主机名 </th>
+            <th> IP地址 </th>
+            <th> 系统 </th>
+            <th> mac地址 </th>
+            <th> cpu </th>
+            <th> 磁盘 </th>
+            <th> 内存 </th>
+            <th> 操作 </th>
+        </thead>
+        <tbody>
+            {% for server in serverList %}
+                <tr>
+                    <td> {{ server.hostname }} </td>
+                    <td> {{ server.ip }} </td>
+                    <td> {{ server.sys }} </td>
+                    <td> {{ server.mac }} </td>
+                    <td> {{ server.cpu }} </td>
+                    <td> {{ server.disk }} </td>
+                    <td> {{ server.memory }} </td>
+                    <td>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#connection" onclick="getValue({{ server.id }})">
+                                登录
+                            </button>
+
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#connection" onclick="getValue({{ server.id }})">
+                                上传
+                            </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        <ul class = 'pagination'>
+            {% for p in page_size %}
+                <li>
+                    {% ifequal number 5 %}
+                    <a href="/server/serverlist/?page={{p}}">{{ p }}</a>
+                    {% else %}
+                    <a href="/server/serverlist/{{ number }}/?page={{p}}">{{ p }}</a>
+                    {% endifequal %}
+                </li>
+            {% endfor %}
+        </ul>
+
+
+    <!-- 登录模态框 -->
+    <div id="connection" class="modal fade" tabindex = '1' role="dialog" aria-labelledby="myModalLabel">
+        <div class = 'modal-dialog' role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type = 'button' class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"> x </span>
+                    </button>
+                    <h4 class = 'modal-title' id="myModalLabel">登录服务器</h4>
+                </div>
+                <div class = 'modal-body'>
+                    <input id="user" class="form-control" type="text" placeholder="username" name="username">
+                    <br>
+                    <input id="passwd" class="form-control" type="password" placeholder="password" name="password">
+                    <br>
+                    <button id="login" class="btn btn-warning pull-right">登录</button>
+                    <br>
+                    <br>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 服务器操作模态框 -->
+    <div id="command" class="modal fade" tabindex = '1' role="dialog" aria-labelledby="myModalLabel">
+        <div class = 'modal-dialog' role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type = 'button' class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"> x </span>
+                    </button>
+                    <h4 class = 'modal-title' id="myModalLabel">服务器操作</h4>
+                </div>
+                <div class = 'modal-body'>
+                    <input id="cmd" class="form-control" type="text" placeholder="命令输入" name="cmd">
+                    <br>
+                    <button id="submit" class="btn btn-warning pull-right" > 提交 </button>
+                    <br>
+                    <div id = 'result' style="height: 400px; overflow-y:scroll;">
+
+                    </div>
+                    <br>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ajax 提交数据 -->
+    <script>
+        function getValue(id) {
+            $('#login').click(
+                function () {
+                    username = $('#user').val();
+                    password = $('#passwd').val();
+                    var sendData = {
+                        'username':username,
+                        'password':password,
+                        'id':id
+                    };
+                    $.ajaxSetup(
+                        {
+                            data:{csrfmiddlewaretoken : "{{ csrf_token }}"}
+                        }
+                    );
+                    $.ajax(
+                        {
+                            url:'/server/serverConnect',
+                            type:'POST',
+                            data:sendData,
+                            success:function (data) {
+                                $('#connection').modal('hide');
+                                $('#command').modal('show')
+                                var serverip = data['data'][1];
+                                console.log(serverip)
+                                $("#submit").click(
+                                    function () {
+                                        var servercmd = $('#cmd').val();
+                                        if(servercmd){
+                                            $.ajax(
+                                                {
+                                                    url:"/server/doCommand/?servercmd="+servercmd+"&serverip="+serverip,
+                                                    type:'GET',
+                                                    data:'',
+                                                    success:function (Data) {
+                                                        var D = Data['data']
+                                                        for(var line in D){
+                                                            $('#result').append("<p>"+D[line]+"</p>")
+                                                        }
+                                                    },
+                                                    error:function (Error) {
+                                                        console.log(Error)
+                                                    }
+                                                }
+                                            )
+                                        }
+                                    }
+                                );
+                            },
+                            error:function (error) {
+                                alert('用户名或密码错误！')
+                            }
+                        }
+                    )
+                }
+            )
+        }
+    </script>
+{% endblock %}

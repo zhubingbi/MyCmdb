@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block style %}
+    <link href = "/static/css/index.css" rel = "stylesheet" type = "text/css">
+    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+{% endblock %}
+{% block title %}
+    Register
+{% endblock %}
+
+{% block label %}
+    添加用户
+{% endblock %}
+
+{% block content %}
+    <form class = "form col-md-6 col-md-offset-2" enctype="multipart/form-data" method = "post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class = "btn btn-lg btn-success btn-block" type = "submit" value = "注册" id = "register">
+        <p style="color:red" id = "error"></p>
+    </form>
+    <script>
+        $(
+            function () {
+                $("#id_phone").blur(
+                    function () {
+                        var value = $('#id_phone').val();
+                        if (value) {
+                            $.ajax(
+                                {
+                                    url:"/user/register_phone/?phone="+value,
+                                    type:"get",
+                                    data:"",
+                                    success:function (data) {
+                                        var status = data['status']
+                                        if (status == 'error'){
+                                            $("#register").attr('disabled',true);
+                                            $("#error").text('* 手机号已存在')
+                                        }else{
+                                            $("#register").attr('disabled',false);
+                                            $("#error").text("")
+                                        }
+                                    },
+                                }
+                            )
+                        }
+                    }
+                );
+            }
+        )
+    </script>
+{% endblock %}
