@@ -71,7 +71,7 @@ def serverlist(request, number=5):
     else:
         page = int(page)
     page_size = range(1, page+1)
-    return render(request, 'serverlist.html', locals())
+    return render(request, 'server/serverlist.html', locals())
 
 
 shell_dict = {}  # 设置一个字典用来存储链接
@@ -183,10 +183,10 @@ def probeserver(request):
 
 def gateone(request):
 
-    return render_to_response('gateone.html', locals())
+    return render_to_response('server/gateone.html', locals())
 
 
 def upload(request):
     userid = request.COOKIES.get('user_id')
     user = Users.objects.get(id=userid)
-    return render_to_response('upload.html', locals())
+    return render_to_response('server/upload.html', locals())

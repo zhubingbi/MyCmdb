@@ -1,6 +1,9 @@
 # coding=utf-8
 from django import forms
 
+# coding=utf-8
+from django import forms
+
 
 class AdminUserForm(forms.Form):
     phone = forms.CharField(max_length=32, label='注册电话', widget=forms.TextInput(attrs={'class': 'form-control'}))

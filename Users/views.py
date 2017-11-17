@@ -97,12 +97,12 @@ def register(request):
         u.photo = photo_name
         try:
             u.save()
-            return render_to_response('register_success.html', locals())
+            return render_to_response('user/register_success.html', locals())
         except:
-            return render_to_response('register_error.html', locals())
+            return render_to_response('user/register_error.html', locals())
 
     form = AdminUserForm()
-    return render(request, 'register.html', locals())
+    return render(request, 'user/register.html', locals())
 
 @loginValid
 def userlist(request):
@@ -110,7 +110,7 @@ def userlist(request):
     user = Users.objects.get(id=userid)
     if request.method == 'GET':
         userList = Users.objects.all()
-    return render_to_response('userlist.html', locals())
+    return render_to_response('user/userlist.html', locals())
 
 @loginValid
 def modifyuser(request):
@@ -118,7 +118,7 @@ def modifyuser(request):
     user = Users.objects.get(id=userid)
     if request.method == 'GET':
         userList = Users.objects.all()
-    return render_to_response('modifyuser.html', locals())
+    return render_to_response('user/modifyuser.html', locals())
 
 
 @csrf_exempt

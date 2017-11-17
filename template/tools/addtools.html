@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+{% block  title %}工具添加{% endblock %}
+{% block style %}
+    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+
+    <script src="{% static  "js/datatables.min.js" %}"></script>
+    <script src="{% static  "js/plugins/select2/select2.full.min.js" %}"></script>
+    <link href="{% static  "css/plugins/codemirror/codemirror.css" %}" rel="stylesheet">
+    <link href="{% static  "css/plugins/codemirror/ambiance.css" %}" rel="stylesheet">
+    <link href="{% static  "css/plugins/codemirror/fold/foldgutter.css" %}" rel="stylesheet">
+    <script src="/static/js/plugins/select2/select2.full.min.js"></script>
+    {% load	bootstrap3 %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>工具添加</h2>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+                <div class="ibox-content">
+                    <form class="form-horizontal" action="#"   method="post">
+                        {% csrf_token %}
+                        {% if form.no_field_errors %}
+                            <div class="alert alert-danger" style="margin: 20px auto 0px">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <div class="col-sm-10 col-sm-offset-0">
+                                {% bootstrap_field form.toolname layout="horizontal" %}
+                                {% bootstrap_field form.toolscript layout="horizontal" %}
+                                {% bootstrap_field form.tooltype layout="horizontal" %}
+                                {% bootstrap_field form.comment layout="horizontal" %}
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-3">
+
+                                <button class="btn btn-primary" type="submit">保存</button>
+                                <button class="btn btn-white" type="reset">重置</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    {% block footer-js %}
+
+        <script src="{% static  "js/plugins/codemirror/codemirror.js" %}"></script>
+        <script src="{% static "js/plugins/codemirror/mode/shell.js" %}"></script>
+        <script src="{% static "js/plugins/codemirror/mode/python.js" %}"></script>
+        <script src="{% static "js/plugins/codemirror/mode/yaml.js" %} "></script>
+
+        <script src="{% static "js/plugins/codemirror/fold/brace-fold.js" %} "></script>
+        <script src="{% static "js/plugins/codemirror/fold/comment-fold.js" %} "></script>
+        <script src="{% static "js/plugins/codemirror/fold/foldcode.js" %} "></script>
+        <script src="{% static "js/plugins/codemirror/fold/foldgutter.js" %} "></script>
+        <script src="{% static "js/plugins/codemirror/fold/indent-fold.js" %} "></script>
+        <script src="{% static "js/plugins/codemirror/fold/markdown-fold.js" %} "></script>
+        <script src="{% static "js/plugins/codemirror/fold/xml-fold.js" %} "></script>
+
+        <script src="{% static "js/plugins/codemirror/edit/matchbrackets.js" %} "></script>
+
+
+
+
+
+        <script>
+            $(document).ready(function () {
+                $('.select2').select2();
+
+                var editor_two = CodeMirror.fromTextArea(document.getElementById("id_tool_script"), {
+                    lineNumbers: true,
+                    matchBrackets: true,
+                    styleActiveLine: true,
+                    lineWrapping: true,
+                    foldGutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+
+                });
+
+            });
+        </script>
+
+
+    {% endblock %}
+
+
+{% endblock %}
