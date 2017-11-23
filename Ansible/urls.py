@@ -8,5 +8,5 @@ urlpatterns = [
     url(r'addTools/$', addtools),
     url(r'toolscript/$', toolscripts),
     url(r'^tool_script_get/(?P<shid>\d{1,3})', tools_script_get),
-    #url(r'^tools-script-execute/$', tools_script_execute),
+    url(r'^tool_script_execute/$', tools_script_execute),
 ]
