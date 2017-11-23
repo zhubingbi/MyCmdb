@@ -1,4 +1,5 @@
 # coding:utf-8
+import os
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from Server.models import Servers
@@ -7,8 +8,8 @@ from .models import toolscript
 from .forms import ToolForm
 from django.http import HttpResponse
 import json
-from  ansible_runner.runner import AdHocRunner, PlayBookRunner
-from  ansible_runner.runner import CommandResultCallback
+#from  ansible_runner.runner import AdHocRunner, PlayBookRunner
+#from  ansible_runner.runner import CommandResultCallback
 
 # Create your views here.
 
@@ -68,7 +69,8 @@ def tools_script_execute(request):
                 return HttpResponse(json.dumps(ret))
             ips = []
             for i in host_ids:
-                ip = Servers.objects.get(id=i)
+                s = Servers.objects.get(id=i)
+                ip = s.ip
                 ips.append(ip)
             ipstring = ','.join(ips)
             sh = toolscript.objects.filter(id=shid)
@@ -139,9 +141,9 @@ def tools_script_execute(request):
                             data2['ip'] = '脚本类型错误'
                             data2['data'] = '脚本类型错误'
                     except Exception as e:
-                        data2['ip'] = serverinfo.ip
-                        data2['data'] = '远程执行权限限制，请修改{}'.format(e)
-                        data1.append(data2)
+                         data2['ip'] = serverinfo.ip
+                         data2['data'] = '远程执行权限限制，请修改{}'.format(e)
+                         data1.append(data2)
 
                 ret = {'status': 'success', 'data': data1, 'msg': '执行成功'}
                 return HttpResponse(json.dumps(ret))
