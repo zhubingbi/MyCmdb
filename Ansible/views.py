@@ -82,13 +82,13 @@ def tools_script_execute(request):
                         a = 'Ansible/script/{}.sh'.format(item.id)
                     os.system("sed 's/\r//' Ansible/script/test.sh > {}".format(a))
 
-                elif item.toolscript == 1:
+                elif item.tooltype == 1:
                     with open('Ansible/script/test.py', 'w+') as f:
                         f.write(item.toolscript)
                         a = 'Ansible/script/{}.py'.format(item.id)
                     os.system("sed 's/\r//' Ansible/script/test.py > {}".format(a))
 
-                elif item.toolscript == 2:
+                elif item.tooltype == 2:
                     with open('Ansible/script/test.yml', 'w+') as f:
                         f.write(item.toolscript)
                         a = 'Ansible/script/{}.yml'.format(item.id)
@@ -145,7 +145,7 @@ def tools_script_execute(request):
                          data2['data'] = '远程执行权限限制，请修改{}'.format(e)
                          data1.append(data2)
 
-                ret = {'status': 'success', 'data': data1, 'msg': '执行成功'}
+                ret = {'data': data1}
                 return HttpResponse(json.dumps(ret))
         except Exception as e:
             ret = {'status': 'error', 'data': None, 'msg': '传输错误{}'.format(e)}
