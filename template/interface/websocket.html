@@ -45,28 +45,26 @@
 
     <!-- 登录模态框 -->
     <div id="connection" class="modal fade" tabindex = '1' role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class = 'modal-dialog' role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type = 'button' class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"> &times; </span>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
                     </button>
-                    <h4 class = 'modal-title' id="myModalLabel">确定重启服务吗？</h4>
+                    <h4 class="modal-title" >重启{{ interface_name }}服务</h4>
                 </div>
+
                 <div class = 'modal-body'>
                     <div class="alert alert-warning">
-
-	                    <strong>警告！</strong>重启可能会导致业务异常！
+                        <strong>警告！</strong>重启可能导致业务异常！
                     </div>
-                    <br>
-                    <br>
-                    <button  type = "button" class="btn btn-default pull-right" data-dismiss="modal"> 取消 </button>
-                    <button  id = "restart" type = 'button' class="btn btn-danger pull-right " > 确定 </button>
-                    <br>
-                    <br>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <a id="restart" class="btn btn-danger asset_all_del"> 确定 </a>
                 </div>
             </div>
-
         </div>
     </div>
 
