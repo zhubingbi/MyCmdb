@@ -16,7 +16,7 @@
         {% endblock %}
     </title>
 
-    <link rel="icon" type="text/icon" href="../static/img/favicon.ico">
+    <link rel="icon" type="text/icon" href="/static/img/favicon.ico">
 
     <!-- Bootstrap Core CSS -->
     <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -57,7 +57,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/index">联众互动管理</a>
+                <a class="navbar-brand" href="/index">联众互动管理平台</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -65,7 +65,7 @@
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <span>
-                        用户 {{ user.user }} 欢迎登录
+                            用户 {{ user.user }} 欢迎登录
                         </span>
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
@@ -121,13 +121,10 @@
                                     <a href="/server/serverlist/">服务器列表</a>
                                 </li>
                                 <li>
-                                    <a href="/server/upload">上传文件</a>
-                                </li>
-                                <li>
                                     <a href="/server/gateone/"> 终端登录 </a>
                                 </li>
                                 <li>
-                                    <a href="morris.html">下载文件列表</a>
+                                    <a href="/morris.html">下载文件列表</a>
                                 </li>
 
                             </ul>
@@ -137,7 +134,7 @@
                             <a href="#"><i class="glyphicon glyphicon-random"></i> 接口管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="flo.html">接口列表</a>
+                                    <a href="/interface/websocket/">WebSocket</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -165,10 +162,7 @@
             <!-- /.row -->
             <div class = "row">
                 {% block content %}
-
                 {% endblock %}
-                {% include  "_js.html" %}
-
             </div>
             <!-- /.row -->
         </div>
@@ -177,8 +171,12 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- jQuery -->
+    <!-- jQuery-->
 
+
+    {% block laststyle%}
+
+    {% endblock %}
     <!-- Bootstrap Core JavaScript -->
     <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
 

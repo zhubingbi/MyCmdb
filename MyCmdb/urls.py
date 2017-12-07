@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^user/', include('Users.urls')),
     url(r'^server/', include('Server.urls')),
     url(r'^ansible/', include('Ansible.urls')),
+    url(r'^interface/', include('Interface.urls')),
 ]

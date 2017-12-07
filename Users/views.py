@@ -12,8 +12,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 def loginValid(fun):
     def inner(request, *args, **keywords):
-        #id = request.COOKIES.get('userid')
-        #name = request.COOKIES.get('username')
         phone = request.session.get('phone')
         if not phone:
             return HttpResponseRedirect('/login/')
@@ -127,7 +125,6 @@ def modifyinput(request):
     if request.method == 'POST' and request.POST:
         userid = request.POST['id']
         user = Users.objects.get(id=int(userid))
-        print request.POST
         m_username = request.POST['modify_name']
         m_passwd = request.POST['modify_passwd']
         m_phone = request.POST['modify_phone']

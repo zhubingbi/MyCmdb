@@ -20,6 +20,7 @@
 
 {% block content %}
 
+    {% include  "_js.html" %}
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
             <h2>脚本执行</h2>
@@ -78,7 +79,7 @@
                                 </table>
                                 <div class="ibox-content">
 
-                                   <div class="form-group form-group-lg"><label class="col-sm-2 control-label">工具</label>
+                                   <div class="form-group"><label class="col-sm-2 control-label">工具</label>
                 <input type="text"   name="shid" style="display:none" value="{{sh.id}}"/>
 
                                 <div class="col-lg-4 col-sm-6"><input type="text" class="form-control" name="name"  required=""  value="{{sh.toolname}}">
@@ -89,7 +90,7 @@
 
 
 
-                                    <div class="form-group form-group-lg">
+                                    <div class="form-group">
                                         <div class="col-sm-6 col-sm-offset-2">
                                             {% csrf_token %}
                                             <a id="cmd" class="btn btn-primary" type="submit">提交</a>

@@ -1,24 +1,17 @@
-<script src="/static/js/jquery-3.1.1.min.js"></script>
+<script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
 <!-- Custom and plugin javascript -->
 
-<script src="/static/js/plugins/pace/pace.min.js"></script>
-
-
 <script src="/static/js/datatables.min.js"></script>
 
-
 <script src="/static/js/plugins/select2/select2.full.min.js"></script>
-
-
 
 <script type="text/JavaScript">
     $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
 </script>
 
-
-
-
+<script src="/static/js/jquery-3.1.1.min.js"></script>
 <!-- Page-Level Scripts -->
 <script>
    $(document).ready(function () {
@@ -52,15 +45,11 @@
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "全部"]]
         });
 
-
-    });
-
-
        $("#CheckedAll").click(function () {
         if ($(this).is(":checked")) {
             $("[name=id]:checkbox").prop("checked", true);
         } else {
             $("[name=id]:checkbox").prop("checked", false);
         }
-    });
+   });
 </script>

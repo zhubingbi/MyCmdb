@@ -1,12 +1,14 @@
 # coding:utf-8
 import os
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import render_to_response
 from Server.models import Servers
 from Users.models import Users
 from .models import toolscript
 from .forms import ToolForm
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 import json
 #from  ansible_runner.runner import AdHocRunner, PlayBookRunner
 #from  ansible_runner.runner import CommandResultCallback
@@ -111,7 +113,7 @@ def tools_script_execute(request):
                                 "password": 'careland',
                             },
                         ]
-
+                        print item.tooltype
                         if item.tooltype == 0:
                             ansible_tuple = (('script', a),)
                             hoc = AdHocRunner(hosts=info)
@@ -150,8 +152,52 @@ def tools_script_execute(request):
         except Exception as e:
             ret = {'status': 'error', 'data': None, 'msg': '传输错误{}'.format(e)}
             return HttpResponse(json.dumps(ret))
-
-
-
-
     return HttpResponse(json.dumps(ret))
+
+
+@csrf_exempt
+def tool_delete(request):
+    ret = {'status': 'error', 'msg': '请求参数为空'}
+    if request.method == 'POST' and request.POST:
+        try:
+            shid = request.POST.get('nid')
+            toolscript.objects.get(id=shid).delete()
+        except Exception as e:
+            ret['status'] = False
+            ret['error'] = '删除请求错误，{}'.format(e)
+    return HttpResponse(json.dumps(ret))
+
+
+@csrf_exempt
+def tools_delete(request):
+    """
+    :param request:
+    :return:
+    批量删除工具
+    """
+    ret = {'status':'error', 'msg':'请求参数为空'}
+    if request.method == 'POST' and request.POST:
+        try:
+            shids = request.POST.getlist('id')
+            idstring = ','.join(shids)
+            toolscript.objects.extra(where=['id IN (' + idstring + ')']).delete()
+        except Exception as e:
+            ret['status'] = 'error'
+            ret['msg'] = '删除请求错误，{}'.format(e)
+    return HttpResponse(json.dumps(ret))
+
+
+@csrf_exempt
+def tool_update(request, shid):
+    userid = request.COOKIES.get('user_id')
+    user = Users.objects.get(id=userid)
+    tool_id = toolscript.objects.get(id=shid)
+    id = shid
+    if request.method == 'POST' and request.POST:
+        form = ToolForm(request.POST, instance=tool_id)
+        if form.is_valid():
+            asset_save = form.save()
+            return HttpResponseRedirect('/ansible/tools')
+    form = ToolForm(instance=tool_id)
+    return render(request, 'tools/tool-update.html', locals())
+

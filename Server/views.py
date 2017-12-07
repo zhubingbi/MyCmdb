@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from MyCmdb.views import loginValid
 from Users.models import Users
 import paramiko
+import json
 
 
 @csrf_exempt   # 接口避免CSRFtoken验证
@@ -29,16 +30,24 @@ def saveServer(request):
             server.ip = request.POST['ip']
             server.mac = request.POST['mac']
             server.sys = request.POST['sys']
-            server.memory = request.POST['memory']
-            server.disk = request.POST['disk']
+            server.memory_total = request.POST['memory_total']
+            server.memory_free = reqeust.POST['memory_free']
+            server.memory_cached = request.POST['memory_cached']
+            server.memory_buffers = request.POST['memory_buffers']
+            server.disk_total = request.POST['disk_total']
+            server.disk_free = reqeust.POST['disk_free']
             server.cpu = request.POST['cpu']
         else:
             # 存在mac地址，就修改原有的.
             server.hostname = request.POST['name']
             server.ip = request.POST['ip']
             server.sys = request.POST['sys']
-            server.memory = request.POST['memory']
-            server.disk = request.POST['disk']
+            server.memory_total = request.POST['memory_total']
+            server.memory_free = request.POST['memory_free']
+            server.memory_cached = request.POST['memory_cached']
+            server.memory_buffers = request.POST['memory_buffers']
+            server.disk_total = request.POST['disk_total']
+            server.disk_free = request.POST['disk_free']
             server.cpu = request.POST['cpu']
         finally:
             server.save()
@@ -190,3 +199,7 @@ def upload(request):
     userid = request.COOKIES.get('user_id')
     user = Users.objects.get(id=userid)
     return render_to_response('server/upload.html', locals())
+
+
+
+

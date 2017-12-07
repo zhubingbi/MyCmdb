@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block style %}
+    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+{% endblock %}
+
 {% block title %}
     用户列表
 {% endblock %}
@@ -11,7 +15,7 @@
             <th> 注册电话 </th>
             <th> 注册邮箱 </th>
             <th> 出生年月 </th>
-            <th> 用户业务分组 </th>
+            <th> 业务分组 </th>
             <th> 是否是管理员 </th>
         </thead>
         <tbody>
