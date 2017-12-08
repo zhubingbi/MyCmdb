@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from Users.views import phoneValid, hashstr
 from Users.models import Users
+from Platform.models import Loginlog
 
 
 def loginValid(fun):
@@ -21,7 +22,9 @@ def login(request):
     if request.method == 'POST' and request.POST:
         phone = request.POST['logname']
         password = request.POST['logpass']
+
         validate = phoneValid(phone)
+        print bool(validate['status'])
         if not validate['status']:  # 如果用户名存在
             info = validate['data']
             hash_password = hashstr(password)
@@ -31,6 +34,10 @@ def login(request):
                 response.set_cookie('user_id', info.id, 3600)
                 response.set_cookie('user_name', info.user, 3600)
                 request.session['phone'] = info.phone
+
+                login_ip = request.META['REMOTE_ADDR']
+                Loginlog.objects.create(user=info.user, ip=login_ip)
+                # 获取登录用户的用户名，登录进来的ip地址并存储
                 return response
         else:
             return HttpResponseRedirect('/login/')

@@ -7,9 +7,15 @@ urlpatterns = [
     url(r'^serverlist/', serverlist),
     url(r'^serverlist/(?P<number>\d{1,3})', serverlist),
 
+
     url(r'^doCommand/', doCommand),
     url(r'^exec/exec_cmd/', exec_cmd),
     url(r'^serverConnect', serverConnect),
     url(r'^gateone', gateone),
     url(r'^upload', upload),
+
+    url(r'^testlist/', testlist),
+    url(r'^testinfo/(?P<serverid>\d{1,3})', testinfo),
+    url(r'^testupdate/(?P<serverid>\d{1,3})', testupdate),
+
 ]

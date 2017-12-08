@@ -16,6 +16,13 @@ class Users(models.Model):
     photo = models.ImageField(upload_to='uploadImg', blank=True, null=True, verbose_name='用户头像')
     isadmin = models.CharField(max_length=32, blank=True, null=True, verbose_name='是否具有管理员权限')
 
+    class Meta:
+        db_table = 'Users'
+        verbose_name = '用户表'
+
+    def __str__(self):
+        return self.user
+
 
 class Groups(models.Model):
     groupname = models.CharField(max_length=32, verbose_name='用户组名')

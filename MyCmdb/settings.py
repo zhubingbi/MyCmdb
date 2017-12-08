@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'Users',
     'Ansible',
     'Interface',
+    'Platform',
 )
 
 MIDDLEWARE_CLASSES = (

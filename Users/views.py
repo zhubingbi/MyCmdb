@@ -40,7 +40,7 @@ def phoneValid(phone):
     try:
         u = Users.objects.get(phone=phone)
     except:
-        result = {'status': True, 'data': None}
+        result = {'status': False, 'data': None}
     else:
         result = {'status': False, 'data': u}
     finally:

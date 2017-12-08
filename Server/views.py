@@ -7,6 +7,8 @@ from models import Servers
 from django.views.decorators.csrf import csrf_exempt
 from MyCmdb.views import loginValid
 from Users.models import Users
+from forms import ServersForm
+from Platform.models import Server_logs
 import paramiko
 import json
 
@@ -31,11 +33,11 @@ def saveServer(request):
             server.mac = request.POST['mac']
             server.sys = request.POST['sys']
             server.memory_total = request.POST['memory_total']
-            server.memory_free = reqeust.POST['memory_free']
+            server.memory_free = request.POST['memory_free']
             server.memory_cached = request.POST['memory_cached']
             server.memory_buffers = request.POST['memory_buffers']
             server.disk_total = request.POST['disk_total']
-            server.disk_free = reqeust.POST['disk_free']
+            server.disk_free = request.POST['disk_free']
             server.cpu = request.POST['cpu']
         else:
             # 存在mac地址，就修改原有的.
@@ -136,7 +138,9 @@ def exec_cmd(request):
 
 
 def doCommand(request):
-    status = {'status':'error', 'data':'request mehod must get and not null'}
+    userid = request.COOKIES.get('user_id')
+    user = Users.objects.get(id=userid)
+    status = {'status':'error', 'data':'request method must get and not null'}
     if request.method == 'GET' and request.GET:
         ip = request.GET['serverip']
         cmd = request.GET['servercmd']
@@ -162,6 +166,8 @@ def doCommand(request):
                     result += str(shell.recv(99999))
                 except:
                     break
+            login_ip = request.META['REMOTE_ADDR']
+            Server_logs.objects.create(user=user.user, ip=login_ip, server_ip=ip, cmd=cmd)
             status['status'] = 'success'
             status['data'] = result.replace('\r', '').split('\n')
     return JsonResponse(status)
@@ -200,6 +206,33 @@ def upload(request):
     user = Users.objects.get(id=userid)
     return render_to_response('server/upload.html', locals())
 
+@loginValid
+def testlist(request):
+    userid = request.COOKIES.get('user_id')
+    user = Users.objects.get(id=userid)
+    server_list = Servers.objects.all()
+    return render(request, 'server/testlist.html', locals())
 
 
+def testinfo(request, serverid):
+    userid = request.COOKIES.get('user_id')
+    user = Users.objects.get(id=userid)
+    serverid = int(serverid)
+    server_info = Servers.objects.get(id=serverid)
+    return render_to_response('server/testinfo.html', locals())
 
+
+def testupdate(request, serverid):
+    userid = request.COOKIES.get('user_id')
+    user = Users.objects.get(id=userid)
+    serverid = int(serverid)
+    serverinfo = Servers.objects.get(id=serverid)
+    if request.method == 'POST':
+        form = ServersForm(request.POST, instance=serverinfo)
+        if form.is_valid():
+            server_save = form.save()
+            url = '/server/testinfo/'+serverid
+            return HttpResponseRedirect(url)
+
+    form = ServersForm(instance=serverinfo)
+    return render(request, 'server/testupdate.html', locals())
