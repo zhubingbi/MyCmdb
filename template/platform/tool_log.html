@@ -1,10 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "base.html" %}
+
+
+{% block style %}
+    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+    <link href="/static/css/datatables.min.css " rel="stylesheet">
+{% endblock %}
+
+{% block  title %}
+    操作日志
+{% endblock %}
+
+
+{% block content %}
+    {% include  "_js.html" %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="panel-options">
+                        <ul class="nav nav-tabs">
+                            <li>
+                                <a class="text-center" href="/platform/login_logs"><i
+                                        class="fa fa-laptop"></i>平台登陆</a>
+                            </li>
+                            <li>
+                                <a class="text-center" href="/platform/server_logs"><i
+                                        class="fa fa-laptop"></i>主机登陆</a>
+                            </li>
+                            <li class="active">
+                                <a class="text-center" href="/platform/tool_logs"><i class="fa fa-laptop"></i>工具执行</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <form id="del_form_asset_all" class="form-horizontal  ">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                        <thead>
+                                        <tr>
+                                            <th>用户</th>
+                                            <th>脚本名称</th>
+                                            <th>脚本内容</th>
+                                            <th>脚本执行服务器</th>
+                                            <th>脚本执行时间</th>
+                                            <th>登录来源ip</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for   row   in  tool_log %}
+                                            <tr class="gradeA">
+                                                <td>{{ row.user }}</td>
+                                                <td>{{ row.tool_name }}</td>
+                                                <td>{{ row.tool_content }}</td>
+                                                <td>{{ row.tool_server_ip }}</td>
+                                                <td>{{ row.ctime }}</td>
+                                                <td>{{ row.ip }}</td>
+                                            </tr>
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

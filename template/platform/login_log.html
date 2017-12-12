@@ -3,14 +3,16 @@
 
 {% block style %}
     <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+    <link href="/static/css/datatables.min.css " rel="stylesheet">
 {% endblock %}
 
 {% block  title %}
-    平台管理
+    操作日志
 {% endblock %}
 
 
 {% block content %}
+    {% include  "_js.html" %}
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-sm-12">
@@ -26,7 +28,7 @@
                                         class="fa fa-laptop"></i>主机登陆</a>
                             </li>
                             <li>
-                                <a class="text-center" href="#"><i class="fa fa-laptop"></i>批量命令</a>
+                                <a class="text-center" href="/platform/tool_logs"><i class="fa fa-laptop"></i>工具执行</a>
                             </li>
                         </ul>
                     </div>

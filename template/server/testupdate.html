@@ -7,16 +7,15 @@
 
 
 {% block content %}
-
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
             <h2>资产更新</h2>
             <ol class="breadcrumb">
                 <li>
-                    <a href="/index.html">主页</a>
+                    <a href="/index">主页</a>
                 </li>
                 <li>
-                    <a href="asset.html">资产管理</a>
+                    <a href="/server/testlist">服务器列表</a>
                 </li>
                 <li class="active">
                     <strong>资产更新</strong>
@@ -34,20 +33,13 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content">
                     <form class="form-horizontal" class="form-horizontal" action="" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% if form.no_field_errors %}
-                            <div class="alert alert-danger" style="margin: 20px auto 0px">
-                                {{ form.non_field_errors }}
-                            </div>
-                        {% endif %}
                         <div class="form-group">
                             <div class="col-sm-10 col-sm-offset-0">
                                 <h3>基本</h3>
                                 {% bootstrap_field form.hostname layout="horizontal" %}
                                 {% bootstrap_field form.ip layout="horizontal" %}
-                                {% bootstrap_field form.ip layout="horizontal" %}
-                                {% bootstrap_field form.ip layout="horizontal" %}
                                 {% bootstrap_field form.port layout="horizontal" %}
+                                {% bootstrap_field form.sys layout="horizontal" %}
                                 {% bootstrap_field form.on_line layout="horizontal" %}
                             </div>
                         </div>
@@ -55,11 +47,14 @@
                         <div class="form-group">
                             <div class="col-sm-10 col-sm-offset-0">
                                 <h3>硬件</h3>
+                                    {% bootstrap_field form.mac layout="horizontal" %}
                                     {% bootstrap_field form.cpu layout="horizontal" %}
                                     {% bootstrap_field form.memory_total layout="horizontal" %}
+                                    {% bootstrap_field form.memory_cached layout="horizontal" %}
+                                    {% bootstrap_field form.memory_buffers layout="horizontal" %}
+                                    {% bootstrap_field form.memory_free layout="horizontal" %}
                                     {% bootstrap_field form.disk_total layout="horizontal" %}
-                                    {% bootstrap_field form.mac layout="horizontal" %}
-
+                                    {% bootstrap_field form.disk_free layout="horizontal" %}
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -68,7 +63,6 @@
                                 <h3>其他</h3>
                                 {% bootstrap_field form.active layout="horizontal" %}
                                 {% bootstrap_field form.content layout="horizontal" %}
-
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -90,20 +84,6 @@
         </div>
 
     </div>
-
-
-    {% block footer-js %}
-        <script>
-            $(document).ready(function () {
-                $('.select2').select2();
-            })
-        </script>
-
-
-    {% endblock %}
-
-
-
 {% endblock %}
 
 

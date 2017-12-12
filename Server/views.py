@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from MyCmdb.views import loginValid
 from Users.models import Users
 from forms import ServersForm
-from Platform.models import Server_logs
+from Platform.models import Serverlog
 import paramiko
 import json
 
@@ -167,7 +167,7 @@ def doCommand(request):
                 except:
                     break
             login_ip = request.META['REMOTE_ADDR']
-            Server_logs.objects.create(user=user.user, ip=login_ip, server_ip=ip, cmd=cmd)
+            Serverlog.objects.create(user=user.user, ip=login_ip, server_ip=ip, cmd=cmd)
             status['status'] = 'success'
             status['data'] = result.replace('\r', '').split('\n')
     return JsonResponse(status)
@@ -221,7 +221,7 @@ def testinfo(request, serverid):
     server_info = Servers.objects.get(id=serverid)
     return render_to_response('server/testinfo.html', locals())
 
-
+@csrf_exempt
 def testupdate(request, serverid):
     userid = request.COOKIES.get('user_id')
     user = Users.objects.get(id=userid)
@@ -229,10 +229,9 @@ def testupdate(request, serverid):
     serverinfo = Servers.objects.get(id=serverid)
     if request.method == 'POST':
         form = ServersForm(request.POST, instance=serverinfo)
-        if form.is_valid():
-            server_save = form.save()
-            url = '/server/testinfo/'+serverid
-            return HttpResponseRedirect(url)
+        server_save = form.save()
+        url = '/server/testinfo/'+str(serverid)
+        return HttpResponseRedirect(url)
 
     form = ServersForm(instance=serverinfo)
     return render(request, 'server/testupdate.html', locals())

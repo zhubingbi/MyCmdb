@@ -2,6 +2,7 @@
 
 {% block style %}
     <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+    <link href="/static/css/datatables.min.css " rel="stylesheet">
 {% endblock %}
 
 {% block title %}
@@ -9,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+    {% include  "_js.html" %}
     <table class = 'table table-bordered col-md-8'>
         <thead style="text-align: center;">
             <th> 用户名 </th>

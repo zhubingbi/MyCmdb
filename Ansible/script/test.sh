@@ -1,2 +1,2 @@
 #!/bin/bash
-echo 'test success'
+echo 'OK'

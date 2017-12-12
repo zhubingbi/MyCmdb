@@ -8,6 +8,26 @@
 
 
 {% block  content %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>资产详情</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/index">主页</a>
+                </li>
+                <li>
+                    <a href="/server/testlist">服务器列表</a>
+                </li>
+                <li class="active">
+                    <strong>资产信息</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-sm-12">
@@ -16,10 +36,6 @@
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a class="text-center"><i class="fa fa-laptop"></i>资产详情</a>
-                            </li>
-                            <li class="pull-right">
-                                <a class="btn btn-outline btn-default" href=""><i
-                                        class="fa fa-edit"></i>编辑</a>
                             </li>
 
                         </ul>
@@ -55,7 +71,7 @@
                                         </tr>
                                         <tr>
                                             <td width="20%">SSH端口:</td>
-                                            <td><b>22</b></td>
+                                            <td><b>{{ server_info.port }}</b></td>
                                         </tr>
                                         <tr>
                                             <td width="20%">登陆用户:</td>
@@ -67,13 +83,9 @@
                                         </tr>
                                         <tr>
                                             <td width="20%">是否启用:</td>
-                                            <td><b>{{ server_info.is_active }}</b></td>
+                                            <td><b>{{ server_info.active }}</b></td>
                                         </tr>
 
-                                        <tr>
-                                            <td width="20%">服务器型号:</td>
-                                            <td><b>{{ server_info.model }}</b></td>
-                                        </tr>
                                         <tr>
                                             <td width="20%">系统版本:</td>
                                             <td><b>{{ server_info.sys }}</b></td>
@@ -97,7 +109,7 @@
 
                                         <tr>
                                             <td width="20%">备注:</td>
-                                            <td><b>{{ server_info.ps }}</b></td>
+                                            <td><b>{{ server_info.content }}</b></td>
                                         </tr>
                                         <tr>
                                             <td width="20%">创建时间:</td>
