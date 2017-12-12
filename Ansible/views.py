@@ -1,5 +1,5 @@
 # coding:utf-8
-import os
+import os, sys
 from django.shortcuts import render, redirect
 from django.shortcuts import render_to_response
 from Server.models import Servers
@@ -88,6 +88,8 @@ def tools_script_execute(request):
     :param request:
     :return:
     """
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
     ret = {'status': 'error', 'data': None, 'msg': None}
     if request.method == 'POST' and request.POST:
         try:
@@ -149,7 +151,7 @@ def tools_script_execute(request):
                             hoc = AdHocRunner(hosts=info)
                             hoc.results_callback = CommandResultCallback()
                             r = hoc.run(ansible_tuple)
-                            data2[ip] = serverinfo.ip
+                            data2['ip'] = serverinfo.ip
                             data2['data'] = r['contacted'][serverinfo.hostname]['stdout']
                             data1.append(data2)
 
@@ -194,6 +196,8 @@ def tools_script_execute(request):
             ret = {'status': 'error', 'data': None, 'msg': '传输错误{}'.format(e)}
             return HttpResponse(json.dumps(ret))
     return HttpResponse(json.dumps(ret))
+
+
 
 
 @csrf_exempt
