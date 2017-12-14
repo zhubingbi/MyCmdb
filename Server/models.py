@@ -29,6 +29,7 @@ class Servers(models.Model):
     class Meta:
         db_table = 'Servers'
         verbose_name = '服务器详情'
+        verbose_name_plural = '服务器详情'
 
     def __str__(self):
         return self.ip
@@ -44,6 +45,7 @@ class Servers_info(models.Model):
     class Meta:
         db_table = 'Servers_info'
         verbose_name = '服务器状况表'
+        verbose_name_plural = '服务器状况表'
 
     def __str__(self):
         return self.ip
