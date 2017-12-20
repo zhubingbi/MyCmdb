@@ -140,7 +140,7 @@ def exec_cmd(request):
 def doCommand(request):
     userid = request.COOKIES.get('user_id')
     user = Users.objects.get(id=userid)
-    status = {'status':'error', 'data':'request method must get and not null'}
+    status = {'status': 'error', 'data': 'request method must get and not null'}
     if request.method == 'GET' and request.GET:
         ip = request.GET['serverip']
         cmd = request.GET['servercmd']
@@ -235,3 +235,4 @@ def testupdate(request, serverid):
 
     form = ServersForm(instance=serverinfo)
     return render(request, 'server/testupdate.html', locals())
+

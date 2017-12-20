@@ -1,5 +1,7 @@
 import time
 from celery import task
+
+
 @task
 def sendmail(mail):
     print ('sending mail to zzz..')

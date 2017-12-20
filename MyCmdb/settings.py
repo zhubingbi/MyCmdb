@@ -129,6 +129,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/img')
 
 
 import djcelery
+from celery.schedules import crontab
+djcelery.setup_loader()
 
 BROKER_URL = 'redis://127.0.0.1:6379:/0'
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
@@ -140,13 +142,3 @@ CELERY_TIMEZONE = 'Asia/Shanghai'
 CELERY_IMPORTS = ('Server.task',)
 
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAdminUser',)
-}
