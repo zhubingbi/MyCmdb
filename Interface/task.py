@@ -3,6 +3,7 @@
 import urllib2
 import paramiko
 from models import *
+from celery import task
 from Server.models import Servers, Servers_info
 import threading, time, datetime
 
@@ -12,6 +13,7 @@ def ssh(ip, cmd, port=22, username='root', password='careland'):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(hostname=ip, port=int(port), username=username, password=password)
         stdin, stdout, stderr = ssh.exec_command(cmd, timeout=10)
+        print stdout
 
         result = stdout.read()
         result_decode = result.decode()
@@ -30,11 +32,14 @@ def ssh(ip, cmd, port=22, username='root', password='careland'):
 
 def job(id):
     server = Servers.objects.filter(id=id).first()
+    print server.ip
     cpu1 = ssh(ip=server.ip, cmd="top -bn 1 -i -c | grep Cpu")
+    print cpu1
     cpu2 = cpu1['data'].split()
     cpu3 = cpu2[1].split('%')
-    cpu4 = cpu3[3].split('%')
-
+    cpu4 = cpu2[3].split('%')
+    print str(cpu3[0])
+    print str(cpu4[0])
     cpu = str(float(str(cpu3[0])) + float(str(cpu4[0])))
 
     total = ssh(ip=server.ip, cmd="free | grep  Mem:")
@@ -43,17 +48,19 @@ def job(id):
         list.remove('')
     mem = float('%.2f' % (float('%.3f' % (int(list[2]) / int(list[1]))) * 100))
 
-    in1 = ssh(ip=server.ip, cmd="cat /proc/net/dev  |  grep eth0")
+    in1 = ssh(ip=server.ip, cmd="cat /proc/net/dev|grep ens37")
     in2 = in1['data'].split()
 
     time.sleep(1)
-    in3 = ssh(ip=server.ip, cmd="cat /proc/net/dev  |  grep eth0")
+    in3 = ssh(ip=server.ip, cmd="cat /proc/net/dev|grep ens37")
     in4 = in3['data'].split()
 
     in_network = int((int(in4[1]) - int(in2[1]))/1024/10*8)
     out_network = int((int(in4[9]) - int(in2[9]))/1024/10*8)
 
-    Interface_sys.objects.create(id=server.id, cpu_use=cpu, mem_use=mem, in_net=in_network, out_network=out_network)
+    Interface_sys.objects.create(server_id=server.id, cpu_use=cpu, mem_use=mem, in_net=in_network, out_net=out_network)
+
+
 
 @task
 def monitor_job():
@@ -62,7 +69,7 @@ def monitor_job():
     for server in object:
         server_list.append(server.id)
     t_list = []
-    for i in serverlist:
+    for i in server_list:
         t = threading.Thread(target=job, args=[i, ])
         t.start()
         t_list.append(t)

@@ -12,6 +12,8 @@ from Platform.models import Serverlog
 import paramiko
 import json
 
+from Interface import task
+
 
 @csrf_exempt   # 接口避免CSRFtoken验证
 def saveServer(request):
