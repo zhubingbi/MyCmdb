@@ -17,35 +17,55 @@ class Servers(models.Model):
     disk_total = models.CharField(max_length=128, verbose_name='磁盘总量', blank=True, null=True)
     disk_free = models.CharField(max_length=128, verbose_name='磁盘剩余空间', blank=True, null=True)
 
-    on_line = models.CharField(max_length=64, blank=True, null=True, verbose_name='服务器所属产品线')
-    active = models.CharField(max_length=32, blank=True, null=True, verbose_name='服务器是否存活？ 1为是，0为否')
+    active = models.BooleanField(default=True, verbose_name='是否启用')
     port = models.CharField(max_length=32, default='22', verbose_name='ssh端口', blank=True, null=True)
 
     content = models.TextField(blank=True, null=True, verbose_name='备注信息')
     ctime = models.DateTimeField(auto_now_add=True, verbose_name='创建日期', blank=True, null=True)
     utime = models.DateTimeField(auto_now=True, verbose_name='最后修改日期', blank=True, null=True)
 
-
     class Meta:
         db_table = 'Servers'
-        verbose_name = '服务器详情'
-        verbose_name_plural = '服务器详情'
+        verbose_name = '服务器信息详情'
+        verbose_name_plural = '服务器信息详情'
 
     def __str__(self):
         return self.ip
 
 
-class Servers_info(models.Model):
-    ip = models.CharField(max_length=128, verbose_name='服务器IP地址')
-    cpu_info = models.CharField(max_length=128, verbose_name='CPU负载')
-    memory_info = models.CharField(max_length=128, verbose_name='内存百分比')
-    disk_info = models.CharField(max_length=128, verbose_name='磁盘百分比')
-    utime = models.DateTimeField(auto_now=True, verbose_name='最后修改日期')
+class ServerStatus(models.Model):
+    cpu_use = models.CharField(verbose_name='cpu使用率', null=True, blank=True, max_length=32)
+    mem_use = models.CharField(verbose_name='内存使用率', null=True, blank=True, max_length=32)
+    in_net = models.CharField(verbose_name='入口流量', null=True, blank=True, max_length=32)
+    out_net = models.CharField(verbose_name='出口流量', null=True, blank=True, max_length=32)
+    server = models.ForeignKey(Servers, on_delete=models.CASCADE,)
+
+    ctime = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    utime = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
-        db_table = 'Servers_info'
-        verbose_name = '服务器状况表'
-        verbose_name_plural = '服务器状况表'
+        db_table = 'ServerStatus'
+        verbose_name = '服务器性能监控表'
+        verbose_name_plural = verbose_name
+        ordering = ['ctime']
 
     def __str__(self):
-        return self.ip
+        return self.server
+
+
+class Permission(models.Model):
+    name = models.CharField("权限名称", max_length=64)
+    url = models.CharField('URL名称', max_length=255)
+    argument_list = models.CharField('参数列表', max_length=255, help_text='多个参数之间用英文半角逗号隔开', blank=True, null=True)
+    describe = models.CharField('描述', max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = '权限表'
+        verbose_name_plural = verbose_name
+        # 权限信息，这里定义的权限的名字，后面是描述信息，描述信息是在django admin中显示权限用的
+        permissions = (
+            ('update_server', '更新具体服务器信息表'),
+        )

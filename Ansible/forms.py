@@ -1,11 +1,11 @@
 # coding:utf-8
-from .models import toolscript
+from .models import Toolscript
 from django import forms
 
 
 class ToolForm(forms.ModelForm):
     class Meta:
-        model = toolscript
+        model = Toolscript
         fields = '__all__'
         widgets = {
             'comment': forms.Textarea(

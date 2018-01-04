@@ -35,7 +35,6 @@ class ServersForm(forms.ModelForm):
         }
         help_texts = {
             'ip': '必填项目,如您管理的主机无外网IP,可将内网IP输入到此。 批量执行工具都是按照此项进行操作的',
-            'on_line': '所属业务组'
         }
         error_messages = {
             'model': {

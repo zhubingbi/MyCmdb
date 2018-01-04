@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block  title %}资产修改{% endblock %}
 {% block style %}
-    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
     {% load	bootstrap3 %}
 {% endblock %}
 
@@ -15,10 +14,10 @@
                     <a href="/index">主页</a>
                 </li>
                 <li>
-                    <a href="/server/testlist">服务器列表</a>
+                    <a href="/server/serverlist">服务器列表</a>
                 </li>
                 <li class="active">
-                    <strong>资产更新</strong>
+                    <strong>信息更新</strong>
                 </li>
             </ol>
         </div>
@@ -40,7 +39,6 @@
                                 {% bootstrap_field form.ip layout="horizontal" %}
                                 {% bootstrap_field form.port layout="horizontal" %}
                                 {% bootstrap_field form.sys layout="horizontal" %}
-                                {% bootstrap_field form.on_line layout="horizontal" %}
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -82,7 +80,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 {% endblock %}
 

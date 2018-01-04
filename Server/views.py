@@ -6,17 +6,18 @@ from django.shortcuts import render_to_response
 from models import Servers
 from django.views.decorators.csrf import csrf_exempt
 from MyCmdb.views import loginValid
-from Users.models import Users
+from Users.models import UserProfile
 from forms import ServersForm
-from Platform.models import Serverlog
 import paramiko
-import json
+from permission import check_permission
+from Interface.models import Interface_sys
+from Platform.models import Serverlog
 
-from Interface import task
+import json
 
 
 @csrf_exempt   # 接口避免CSRFtoken验证
-def saveServer(request):
+def saveserver(request):
     """
     接口提交服务器信息
     :param request:
@@ -63,28 +64,28 @@ def saveServer(request):
     return JsonResponse(result)
 
 
-@loginValid
-def serverlist(request, number=5):
-    number = int(number)
-    userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
-    if request.method == 'GET' and request.GET:
-        p = int(request.GET['page'])
-    else:
-        p = 1
-    page_up = (p-1)*number
-    page_down = p*number
-    all_server = Servers.objects.all()
-
-    serverList = all_server[page_up:page_down]
-    total = len(all_server)
-    page = total/float(number)
-    if int(page) != page:
-        page = int(page) + 1
-    else:
-        page = int(page)
-    page_size = range(1, page+1)
-    return render(request, 'server/serverlist.html', locals())
+# @loginValid
+# def serverlist(request, number=5):
+#     number = int(number)
+#     userid = request.COOKIES.get('user_id')
+#     user = Users.objects.get(id=userid)
+#     if request.method == 'GET' and request.GET:
+#         p = int(request.GET['page'])
+#     else:
+#         p = 1
+#     page_up = (p-1)*number
+#     page_down = p*number
+#     all_server = Servers.objects.all()
+#
+#     serverList = all_server[page_up:page_down]
+#     total = len(all_server)
+#     page = total/float(number)
+#     if int(page) != page:
+#         page = int(page) + 1
+#     else:
+#         page = int(page)
+#     page_size = range(1, page+1)
+#     return render(request, 'server/serverlist.html', locals())
 
 
 shell_dict = {}  # 设置一个字典用来存储链接
@@ -141,7 +142,7 @@ def exec_cmd(request):
 
 def doCommand(request):
     userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
+    user = UserProfile.objects.get(id=userid)
     status = {'status': 'error', 'data': 'request method must get and not null'}
     if request.method == 'GET' and request.GET:
         ip = request.GET['serverip']
@@ -190,51 +191,86 @@ def doCommand(request):
 #        status['data'] = result.split('\n')
 #    return JsonResponse(status)
 
-def probeserver(request):
-    """
-    页面触发刷新
-    :param request:
-    :return:
-    """
-
-
 def gateone(request):
-
     return render_to_response('server/gateone.html', locals())
 
 
-def upload(request):
-    userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
-    return render_to_response('server/upload.html', locals())
-
 @loginValid
-def testlist(request):
+def serverlist(request):
     userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
+    try:
+        user = UserProfile.objects.get(id=userid)
+    except UserProfile.DoesNotExist:
+        return HttpResponseRedirect('/login')
     server_list = Servers.objects.all()
+    serverlist_active = 'active'
+    server_isactive = 'active'
     return render(request, 'server/testlist.html', locals())
 
-
-def testinfo(request, serverid):
+@loginValid
+def serverinfo(request):
     userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
-    serverid = int(serverid)
+    try:
+        user = UserProfile.objects.get(id=userid)
+    except UserProfile.DoesNotExist:
+        return HttpResponseRedirect('/login')
+    serverid = int(request.GET.get("serverid"))
+    #serverid = int(serverid)
     server_info = Servers.objects.get(id=serverid)
+    serverlist_active = 'active'
+    server_isactive = 'active'
     return render_to_response('server/testinfo.html', locals())
 
+
 @csrf_exempt
-def testupdate(request, serverid):
+@check_permission
+def serverupdate(request):
     userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
-    serverid = int(serverid)
+    try:
+        user = UserProfile.objects.get(id=userid)
+    except UserProfile.DoesNotExist:
+        return HttpResponseRedirect('/login')
+    serverid = int(request.GET.get('serverid'))
     serverinfo = Servers.objects.get(id=serverid)
     if request.method == 'POST':
         form = ServersForm(request.POST, instance=serverinfo)
         server_save = form.save()
-        url = '/server/testinfo/'+str(serverid)
+        url = '/server/serverinfo/?serverid='+str(serverid)
         return HttpResponseRedirect(url)
-
     form = ServersForm(instance=serverinfo)
+    serverlist_active = 'active'
+    server_isactive = 'active'
     return render(request, 'server/testupdate.html', locals())
+
+
+def serverstatus(request):
+    try:
+        userid = request.COOKIES.get('user_id')
+        try:
+            user = UserProfile.objects.get(id=userid)
+        except UserProfile.DoesNotExist:
+            return HttpResponseRedirect('/login')
+        serverid = int(request.GET.get('serverid'))
+        all = Interface_sys.objects.all()
+        date, cpu_use, mem_use, in_net, out_net = [], [], [], [], []
+        serverlist_active = 'active'
+        server_isactive = 'active'
+        for i in all:
+            if i.server_id == int(serverid):
+                date.append(i.ctime.strftime("%m-%d %H:%M"))
+                cpu_use.append(i.cpu_use)
+                mem_use.append(i.mem_use)
+                in_net.append(i.in_net)
+                out_net.append(i.out_net)
+            if cpu_use:
+                cpu = cpu_use[-1]
+                mem = mem_use[-1]
+            else:
+                cpu = 0
+                mem = 0
+            return render(request, 'server/serversys.html', locals())
+    except Exception as e:
+        error = "错误,{}".format(e)
+        server_list = Servers.objects.all()
+        return render(request, 'server/testlist.html', locals())
 

@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from forms import AdminUserForm
 from PIL import Image
-from models import Users
+from models import UserProfile
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 

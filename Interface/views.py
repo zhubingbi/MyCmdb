@@ -6,13 +6,16 @@ from django.shortcuts import render_to_response
 from Server.models import Servers
 from django.http import JsonResponse
 from django.shortcuts import HttpResponseRedirect
-from Users.models import Users
+from Users.models import UserProfile
 
 
 @loginValid
 def websockestatus(request):
     userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
+    try:
+        user = UserProfile.objects.get(id=userid)
+    except UserProfile.DoesNotExist:
+        return HttpResponseRedirect('/login')
     websockinfo = Servers.objects.all()
     interface_name = "websocket"
     return render_to_response('interface/websocket.html', locals())
@@ -20,7 +23,10 @@ def websockestatus(request):
 @csrf_exempt
 def interface_restart(request):
     userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
+    try:
+        user = UserProfile.objects.get(id=userid)
+    except UserProfile.DoesNotExist:
+        return HttpResponseRedirect('/login')
     res = {'status': 'error', 'msg': '请求参数不能为空'}
     if request.method == 'POST' and request.POST:
         serverid = request.POST['id']

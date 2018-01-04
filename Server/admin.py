@@ -4,19 +4,18 @@ from models import *
 # Register your models here.
 
 
-class Serveradmin(admin.ModelAdmin):
+class ServersAdmin(admin.ModelAdmin):
     search_fields = ('hostname', 'ip')
-    list_display = ('hostname', 'ip', 'sys', 'on_line', 'ctime')
+    list_display = ('hostname', 'ip', 'sys', 'ctime')
     list_display_links = ('ip',)
-    list_filter = ('on_line',)
 
 
-class Servers_infoadmin(admin.ModelAdmin):
-    search_fields = ('ip',)
-    list_display = ('ip', 'cpu_info', 'memory_info', 'disk_info', 'utime')
-    list_display_links = ('ip',)
-    list_filter = ('ip',)
+class PermissionAdmin(admin.ModelAdmin):
+    search_fields = ('url',)
+    list_display = ('name', 'url', 'describe',)
+    list_display_links = ('name',)
 
 
-admin.site.register(Servers, Serveradmin)
-admin.site.register(Servers_info, Servers_infoadmin)
+admin.site.register(Servers, ServersAdmin)
+admin.site.register(ServerStatus)
+admin.site.register(Permission, PermissionAdmin)

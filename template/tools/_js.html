@@ -16,7 +16,6 @@
 <script>
    $(document).ready(function () {
         $('.dataTables-example').dataTable({
-
             "oLanguage": {
                 "sLengthMenu": "每页显示 _MENU_ 条记录",
                 "sZeroRecords": "对不起，查询不到任何相关数据",
@@ -37,10 +36,7 @@
                 'targets': [0],    //都默认不排序
                 'orderable': false
             }],
-
-
             dom: '<"html5buttons"B>lTfgitp,',
-
             buttons: [],
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "全部"]]
         });

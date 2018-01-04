@@ -1,15 +1,12 @@
 {% extends "base.html" %}
-{% load static %}
-{% block  title %}工具添加{% endblock %}
-{% block style %}
-    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
+{% block  title %}
+    工具添加
+{% endblock %}
 
-    <script src="{% static  "js/datatables.min.js" %}"></script>
-    <script src="{% static  "js/plugins/select2/select2.full.min.js" %}"></script>
-    <link href="{% static  "css/plugins/codemirror/codemirror.css" %}" rel="stylesheet">
-    <link href="{% static  "css/plugins/codemirror/ambiance.css" %}" rel="stylesheet">
-    <link href="{% static  "css/plugins/codemirror/fold/foldgutter.css" %}" rel="stylesheet">
-    <script src="/static/js/plugins/select2/select2.full.min.js"></script>
+{% block style %}
+    <link href="/static/css/plugins/codemirror/codemirror.css" rel="stylesheet">
+    <link href="/static/css/plugins/codemirror/ambiance.css" rel="stylesheet">
+    <link href="/static/css/plugins/codemirror/fold/foldgutter.css" rel="stylesheet">
     {% load	bootstrap3 %}
 {% endblock %}
 
@@ -77,20 +74,20 @@
 
     {% block footer-js %}
 
-        <script src="{% static  "js/plugins/codemirror/codemirror.js" %}"></script>
-        <script src="{% static "js/plugins/codemirror/mode/shell.js" %}"></script>
-        <script src="{% static "js/plugins/codemirror/mode/python.js" %}"></script>
-        <script src="{% static "js/plugins/codemirror/mode/yaml.js" %} "></script>
+        <script src="/static/js/plugins/codemirror/codemirror.js"></script>
+        <script src="/static/js/plugins/codemirror/mode/shell.js"></script>
+        <script src="/static/js/plugins/codemirror/mode/python.js"></script>
+        <script src="/static/js/plugins/codemirror/mode/yaml.js"></script>
 
-        <script src="{% static "js/plugins/codemirror/fold/brace-fold.js" %} "></script>
-        <script src="{% static "js/plugins/codemirror/fold/comment-fold.js" %} "></script>
-        <script src="{% static "js/plugins/codemirror/fold/foldcode.js" %} "></script>
-        <script src="{% static "js/plugins/codemirror/fold/foldgutter.js" %} "></script>
-        <script src="{% static "js/plugins/codemirror/fold/indent-fold.js" %} "></script>
-        <script src="{% static "js/plugins/codemirror/fold/markdown-fold.js" %} "></script>
-        <script src="{% static "js/plugins/codemirror/fold/xml-fold.js" %} "></script>
+        <script src="/static/js/plugins/codemirror/fold/brace-fold.js"></script>
+        <script src="/static/js/plugins/codemirror/fold/comment-fold.js"></script>
+        <script src="/static/js/plugins/codemirror/fold/foldcode.js"></script>
+        <script src="/static/js/plugins/codemirror/fold/foldgutter.js"></script>
+        <script src="/static/js/plugins/codemirror/fold/indent-fold.js"></script>
+        <script src="/static/js/plugins/codemirror/fold/markdown-fold.js"></script>
+        <script src="/static/js/plugins/codemirror/fold/xml-fold.js"></script>
 
-        <script src="{% static "js/plugins/codemirror/edit/matchbrackets.js" %} "></script>
+        <script src="/static/js/plugins/codemirror/edit/matchbrackets.js"></script>
 
     {% endblock %}
 

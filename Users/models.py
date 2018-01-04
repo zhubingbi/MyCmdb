@@ -1,34 +1,28 @@
 # coding=utf-8
 from django.db import models
+from django.contrib.auth.models import User, Group
+from django.db.models.signals import post_save
 
 
-# Create your models here.
-
-
-class Users(models.Model):
-    user = models.CharField(max_length=32, verbose_name='用户名')
-
-    groups = models.CharField(max_length=32, verbose_name='所属组')
-    password = models.CharField(max_length=32, verbose_name='用户密码')
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    groups = models.ForeignKey(to=Group, to_field='id', on_delete=models.SET_NULL, verbose_name='业务组',null=True)
     phone = models.CharField(max_length=32, verbose_name='注册电话')
+    photo = models.ImageField(upload_to='uploadImg', blank=True, null=True, verbose_name='用户头像')
     birthday = models.CharField(max_length=32, verbose_name='用户生日')
     email = models.EmailField(blank=True, null=True, verbose_name='邮箱')
 
-    photo = models.ImageField(upload_to='uploadImg', blank=True, null=True, verbose_name='用户头像')
-    isadmin = models.CharField(max_length=32, blank=True, null=True, verbose_name='是否具有管理员权限')
-
     class Meta:
-        db_table = 'Users'
-        verbose_name = '用户表'
-
-    def __str__(self):
-        return self.user
+        db_table = 'UserProfile'
+        verbose_name = '平台用户表'
+        verbose_name_plural = verbose_name
 
 
-class Groups(models.Model):
-    groupname = models.CharField(max_length=32, verbose_name='用户组名')
-    authority = models.CharField(max_length=32, verbose_name='权限')
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        profile = UserProfile()
+        profile.user = instance
+        profile.save()
 
+post_save.connect(create_user_profile, sender=User)
 
-class Authority(models.Model):
-    authcontent = models.CharField(max_length=128, verbose_name='权限内容')

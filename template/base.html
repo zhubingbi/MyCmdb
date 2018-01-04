@@ -1,14 +1,9 @@
-<!-- base html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
     <title>
         {% block title %}
@@ -18,182 +13,170 @@
 
     <link rel="icon" type="text/icon" href="/static/img/favicon.ico">
 
-    <!-- Bootstrap Core CSS -->
-    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/datatables.min.css" rel="stylesheet">
+    <link href="/static/css/plugins/select2/select2.min.css"   rel="stylesheet">
 
-    <!-- MetisMenu CSS -->
-    <link href="/static/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="/static/dist/css/sb-admin-2.css" rel="stylesheet">
-
-    <!-- Morris Charts CSS -->
-    <link href="/static/vendor/morrisjs/morris.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="/static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <script src="/static/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/static/js/inspinia.js"></script>
+    <script src="/static/js/plugins/pace/pace.min.js"></script>
+    <script src="/static/js/datatables.min.js"></script>
+    <script src="/static/js/plugins/select2/select2.full.min.js"></script>
     {% block style%}
 
     {% endblock %}
 </head>
 
 <body>
-
     <div id="wrapper">
+        <!--左侧栏-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <!--左侧用户信息栏-->
+                        <div class="dropdown profile-element">
+                            <span>
+                                <img alt="image" class="img-circle" style="width:48px; height:48px" src="/static/img/{{ user.photo }}" />
+                            </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs">
+                                        <strong class="font-bold">{{user.user}}</strong>
+                                    </span>
+                                    <span class="text-muted text-xs block">运维组 <b class="caret"></b>
+                                    </span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a href="profile.html">个人中心</a></li>
+                                <li><a href="contacts.html">往来</a></li>
+                                <li><a href="mailbox.html">邮箱</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/login/">登出</a></li>
+                            </ul>
+                        </div>
 
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/index">联众互动管理平台</a>
-                <img src="/static/img/lz.png"/>
+                        <div class="logo-element">
+                            Cmdb
+                        </div>
+                    </li>
+
+                    <!--左侧导航栏-->
+                    <li>
+                        <a href="/index/"><i class="fa fa-th-large"></i> <span class="nav-label">仪表盘</span></a>
+                    </li>
+
+                    <li class="{{server_isactive}}">
+                        <a href="#"><i class="fa fa-globe"></i> <span class="nav-label">资产管理</span><span class="fa arrow"> </span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li class="{{ serverlist_active}}">
+                                <a href="/server/serverlist">服务器管理</a>
+                            </li>
+                            <li>
+                                <a href="#">跳板机</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="{{git_isactive}}">
+                        <a href="#"><i class="fa fa-drivers-license"></i> <span class="nav-label">代码发布</span><span class="label label-info pull-right">待开发</span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li class="{{ git.active}}">
+                                <a href="#">代码发布</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="{{tool_isactive}}">
+                        <a href="#">
+                            <i class="fa fa-laptop"></i>
+                            <span class="nav-label">工具面板</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse">
+                            <li class="{{tool_active}}">
+                                <a href="/ansible/tools">工具管理</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="{{Interface_isactive}}">
+                        <a href="#"><i class="fa fa-sitemap"></i> <span class="nav-label">接口管理</span>
+                            <!-- <span class="fa arrow"> </span> -->
+                            <span class="label label-warning pull-right">正开发</span>
+                        </a>
+                        <ul class="nav nav-second-level collapse">
+                            <li class="{{ websoket.active}}">
+                                <a href="/admin">websoket</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="{{platform_isactive}}">
+                        <a href="#"><i class="fa fa-database"></i> <span class="nav-label">后台管理</span><span class="fa arrow"> </span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li class="{{ admin_active}}">
+                                <a href="/admin">Django-admin</a>
+                            </li>
+                            <li class="{{ logs_active }}">
+                                <a href="/platform/login_logs">操作日志</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
             </div>
-            <!-- /.navbar-header -->
-
-            <ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span>
-                            用户 {{ user.user }} 欢迎登录
-                        </span>
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="/index/"><i class="fa fa-gear fa-fw"></i> 个人中心</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="/logout/"><i class="fa fa-sign-out fa-fw"></i> 登出</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
-            <!-- /.navbar-top-links -->
-
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" id="side-menu">
-                        <li>
-                            <a href="#"><i class="glyphicon glyphicon-user"></i> 平台管理 <span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="/user/listUser/">用户列表</a>
-                                </li>
-                                <li>
-                                    <a href="/user/addUser/">添加用户</a>
-                                </li>
-                                <li>
-                                    <a href="/user/modifyUser/">修改用户信息</a>
-                                </li>
-                                <li>
-                                    <a href="/platform/login_logs/">操作日志</a>
-                                </li>
-
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="#"><i class="	glyphicon glyphicon-wrench"></i> 执行任务 <span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="/ansible/tools/">批量工具</a>
-                                </li>
-                                <li>
-                                    <a href="/ansible/addTools/">添加工具</a>
-                                </li>
-
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="#"><i class="glyphicon glyphicon-tasks"></i> 服务器管理 <span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="/server/testlist/">服务器列表</a>
-                                </li>
-                                <li>
-                                    <a href="/server/gateone/"> 终端登录 </a>
-                                </li>
-
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="#"><i class="glyphicon glyphicon-random"></i> 接口管理<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="/interface/websocket/">WebSocket</a>
-                                </li>
-                            </ul>
-
-                            <!-- /.nav-second-level -->
-                        </li>
-
-
-                    </ul>
-                </div>
-                <!-- /.sidebar-collapse -->
-            </div>
-            <!-- /.navbar-static-side -->
         </nav>
 
-        <div id="page-wrapper">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">
-                        {% block label %}
-                            <img class="img-circle" style="width:80px; height:80px" src="/static/img/uploadImg/{{ user.photo }}">
-                        {% endblock %}
-                    </h1>
+        <!--页面正文信息-->
+        <div id="page-wrapper" class="gray-bg">
+            <!--正文顶部欢迎信息-->
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+        	            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                    </div>
+
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                            <span class="m-r-sm text-muted welcome-message">欢迎{{ user.user }}登陆</span>
+                        </li>
+                        <li>
+                            <a href="/login/">
+                                <i class="fa fa-sign-out"></i> 注销
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!--正文主体显示信息-->
+            {% block content %}
+
+            {% endblock%}
+
+            <!--底部添加js-->
+            {% block footer-js %}
+
+            {% endblock %}
+
+            <!-- 正文底部copy栏 -->
+            <div class="footer">
+                <div class="pull-right">
+                    10GB of <strong>250GB</strong> Free.
                 </div>
-                <!-- /.col-lg-12 -->
+                <div>
+                    <strong>Copyright</strong> 联众互动有限公司 &copy; 2017-2018
+                </div>
             </div>
-
-            <!-- /.row -->
-            <div class = "row">
-                {% block content %}
-                {% endblock %}
-            </div>
-            <!-- /.row -->
         </div>
-        <!-- /#page-wrapper -->
-
     </div>
-    <!-- /#wrapper -->
-
-    <!-- jQuery-->
-
-
-    {% block laststyle%}
-
-    {% endblock %}
-    <!-- Bootstrap Core JavaScript -->
-    <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="/static/vendor/metisMenu/metisMenu.min.js"></script>
-
-    <!-- Morris Charts JavaScript -->
-    <script src="/static/vendor/raphael/raphael.min.js"></script>
-    <script src="/static/vendor/morrisjs/morris.min.js"></script>
-    <script src="/static/data/morris-data.js"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="/static/dist/js/sb-admin-2.js"></script>
-
 </body>
-
 </html>

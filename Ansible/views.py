@@ -3,30 +3,17 @@ import os, sys
 from django.shortcuts import render, redirect
 from django.shortcuts import render_to_response
 from Server.models import Servers
-from Users.models import Users
-from .models import toolscript
+from Users.models import UserProfile
+from .models import *
 from .forms import ToolForm
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from Platform.models import Toollog
 import json
+from permission import check_permission
 #from  ansible_runner.runner import AdHocRunner, PlayBookRunner
 #from  ansible_runner.runner import CommandResultCallback
-
-# Create your views here.
-
-
-# def hostlist(request):
-#     """
-#     显示所有服务器列表，在执行工具页面展示勾选服务器
-#     :param request:
-#     :return:
-#     """
-#     userid = request.COOKIES.get('user_id')
-#     user = Users.objects.get(id=userid)
-#     serverList = Servers.objects.all()
-#     return render_to_response('hostlist.html', locals())
 
 
 def tools(request):
@@ -36,19 +23,30 @@ def tools(request):
     :return:
     """
     userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
-    obj = toolscript.objects.all()
+    try:
+        user = UserProfile.objects.get(id=userid)
+    except UserProfile.DoesNotExist:
+        return HttpResponseRedirect('/login')
+    obj = Toolscript.objects.all()
+    tool_isactive = 'active'
+    tool_active = 'active'
     return render_to_response('tools/tools.html', locals())
 
 
-def addtools(request):
+@check_permission
+def addtool(request):
     """
     添加工具
     :param request:
     :return:
     """
     userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
+    try:
+        user = UserProfile.objects.get(id=userid)
+    except UserProfile.DoesNotExist:
+        return HttpResponseRedirect('/login')
+    tool_isactive = 'active'
+    tool_active = 'active'
     if request.method == 'POST' and request.POST:
         form = ToolForm(request.POST)
         if form.is_valid():
@@ -60,14 +58,8 @@ def addtools(request):
     return render(request, 'tools/addtools.html', locals())
 
 
-# def toolscripts(request):
-#     userid = request.COOKIES.get('user_id')
-#     user = Users.objects.get(id=userid)
-#     serverList = Servers.objects.all()
-#     return render_to_response('tools/tools-script.html', locals())
-
-
-def tools_script_get(request, shid):
+@check_permission
+def tools_script_get(request):
     """
     选中获取工具
     :param request:
@@ -75,10 +67,16 @@ def tools_script_get(request, shid):
     :return:
     """
     userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
+    try:
+        user = UserProfile.objects.get(id=userid)
+    except UserProfile.DoesNotExist:
+        return HttpResponseRedirect('/login')
+    shid = int(request.GET.get('shid'))
+    tool_isactive = 'active'
+    tool_active = 'active'
     if request.method == 'GET':
         obj = Servers.objects.all()
-        sh = toolscript.objects.get(id=shid)
+        sh = Toolscript.objects.get(id=shid)
         return render(request, 'tools/tools-script.html', locals())
 
 
@@ -107,7 +105,7 @@ def tools_script_execute(request):
                 ip = s.ip
                 ips.append(ip)
             ipstring = ','.join(ips)
-            sh = toolscript.objects.filter(id=shid)
+            sh = Toolscript.objects.filter(id=shid)
 
             for item in sh:
                 if item.tooltype == 0:
@@ -182,8 +180,8 @@ def tools_script_execute(request):
                 ret = {'data': data1}
 
                 userid = request.COOKIES.get('user_id')
-                user = Users.objects.get(id=userid)
-                tool = toolscript.objects.get(id=shid)
+                user = UserProfile.objects.get(id=userid)
+                tool = Toolscript.objects.get(id=shid)
                 username = user.user
                 serverip = ipstring
                 toolname = tool.toolname
@@ -199,8 +197,8 @@ def tools_script_execute(request):
 
 
 
-
 @csrf_exempt
+@check_permission
 def tool_delete(request):
     """
     删除工具
@@ -211,7 +209,7 @@ def tool_delete(request):
     if request.method == 'POST' and request.POST:
         try:
             shid = request.POST.get('nid')
-            toolscript.objects.get(id=shid).delete()
+            Toolscript.objects.get(id=shid).delete()
         except Exception as e:
             ret['status'] = False
             ret['error'] = '删除请求错误，{}'.format(e)
@@ -219,6 +217,7 @@ def tool_delete(request):
 
 
 @csrf_exempt
+@check_permission
 def tools_delete(request):
     """
     批量删除工具
@@ -230,7 +229,7 @@ def tools_delete(request):
         try:
             shids = request.POST.getlist('id')
             idstring = ','.join(shids)
-            toolscript.objects.extra(where=['id IN (' + idstring + ')']).delete()
+            Toolscript.objects.extra(where=['id IN (' + idstring + ')']).delete()
         except Exception as e:
             ret['status'] = 'error'
             ret['msg'] = '删除请求错误，{}'.format(e)
@@ -238,7 +237,8 @@ def tools_delete(request):
 
 
 @csrf_exempt
-def tool_update(request, shid):
+@check_permission
+def tool_update(request):
     """
     更新工具
     :param request:
@@ -246,9 +246,15 @@ def tool_update(request, shid):
     :return:
     """
     userid = request.COOKIES.get('user_id')
-    user = Users.objects.get(id=userid)
-    tool_id = toolscript.objects.get(id=shid)
+    try:
+        user = UserProfile.objects.get(id=userid)
+    except UserProfile.DoesNotExist:
+        return HttpResponseRedirect('/login')
+    shid = int(request.GET.get('shid'))
+    tool_id = Toolscript.objects.get(id=shid)
     id = shid
+    tool_isactive = 'active'
+    tool_active = 'active'
     if request.method == 'POST' and request.POST:
         form = ToolForm(request.POST, instance=tool_id)
         if form.is_valid():

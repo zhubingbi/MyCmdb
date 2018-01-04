@@ -2,8 +2,7 @@
 
 
 {% block style %}
-    <script type = "text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
-    <link href="/static/css/datatables.min.css " rel="stylesheet">
+
 {% endblock %}
 
 {% block  title %}
@@ -12,7 +11,23 @@
 
 
 {% block content %}
-    {% include  "_js.html" %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>服务器列表</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/index">主页</a>
+                </li>
+                <li>
+                    <a href="">平台管理</a>
+                </li>
+                <li class="active">
+                    <strong>平台登录日志</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-sm-12">
@@ -25,7 +40,7 @@
                             </li>
                             <li>
                                 <a class="text-center" href="/platform/server_logs"><i
-                                        class="fa fa-laptop"></i>主机登陆</a>
+                                        class="fa fa-laptop"></i>服务器登陆</a>
                             </li>
                             <li>
                                 <a class="text-center" href="/platform/tool_logs"><i class="fa fa-laptop"></i>工具执行</a>
@@ -65,4 +80,5 @@
         </div>
     </div>
 
+    {% include  "_js.html" %}
 {% endblock %}
