@@ -87,4 +87,18 @@
 
         <script src="{% static "js/plugins/codemirror/edit/matchbrackets.js" %} "></script>
 
+        <script>
+            $(document).ready(function () {
+                var myTextarea = document.getElementById('id_toolscript');
+                var editor = CodeMirror.fromTextArea(myTextarea, {
+                    lineNumbers: true,
+                    matchBrackets: true,
+                    styleActiveLine: true,
+                    lineWrapping: true,
+                    foldGutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+                });
+            });
+        </script>
+
 {% endblock %}
