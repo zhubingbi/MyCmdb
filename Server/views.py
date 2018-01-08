@@ -1,9 +1,9 @@
 # coding:utf-8
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render_to_response
-from models import Servers
+from models import Servers, ServerStatus
 from django.views.decorators.csrf import csrf_exempt
 from MyCmdb.views import loginValid
 from Users.models import UserProfile
@@ -12,7 +12,9 @@ import paramiko
 from permission import check_permission
 from Interface.models import Interface_sys
 from Platform.models import Serverlog
-
+import time, datetime
+from pyecharts import Gauge, Line
+from django.template import loader
 import json
 
 
@@ -243,6 +245,34 @@ def serverupdate(request):
     return render(request, 'server/testupdate.html', locals())
 
 
+def Gauge_cpumem(attr, data):
+    bar = Gauge("", width=600, height=300)
+    bar.add("", attr, data)
+    return bar
+
+
+def Line_network(d, title, title1, date, network_in, network_put):
+    bar = Line(d, width=1600, height=500)
+    bar.add(title, date, network_in)
+    bar.add(title1, date, network_put)
+    return bar
+
+def pyecharts_add(echa):
+    """
+    echarts 添加 自适应 宽度
+    :param echa:
+    :return:
+    """
+    a = echa.split('</div>')
+    a1 = a[0].split('"')
+    b = a1[3].split(';')
+    a1[3] = b[1]
+    div = '"'.join(a1)
+
+    onresize = "    myChart_%s.resize(); " % (a1[1])
+    ret = div + "</div>" + a[1]
+    return ret, onresize
+
 def serverstatus(request):
     try:
         userid = request.COOKIES.get('user_id')
@@ -251,7 +281,10 @@ def serverstatus(request):
         except UserProfile.DoesNotExist:
             return HttpResponseRedirect('/login')
         serverid = int(request.GET.get('serverid'))
-        all = Interface_sys.objects.all()
+        all = ServerStatus.objects.all()
+        template = loader.get_template('server/serversys.html')
+        now = datetime.datetime.now()
+        last_time = now+datetime.timedelta(days=-7)
         date, cpu_use, mem_use, in_net, out_net = [], [], [], [], []
         serverlist_active = 'active'
         server_isactive = 'active'
@@ -263,12 +296,31 @@ def serverstatus(request):
                 in_net.append(i.in_net)
                 out_net.append(i.out_net)
             if cpu_use:
-                cpu = cpu_use[-1]
-                mem = mem_use[-1]
+                cpu_data = cpu_use[-1]
+                mem_data = mem_use[-1]
             else:
-                cpu = 0
-                mem = 0
-            return render(request, 'server/serversys.html', locals())
+                cpu_data = 0
+                mem_data = 0
+
+            cpu = Gauge_cpumem(attr="CPU", data=cpu_data)
+            mem = Gauge_cpumem(attr="内存", data=mem_data)
+            network = Line_network(d="kb/s", title="进流量", title1="出流量", date=date, network_in=in_net,
+                                   network_put=out_net)
+            history_cpumem = Line_network(d="%", title="CPU", title1="内存", date=date, network_in=cpu_use,
+                                          network_put=mem_use)
+            context = dict(
+                cpu=pyecharts_add(cpu.render_embed())[0],
+                mem=pyecharts_add(mem.render_embed())[0],
+                network=pyecharts_add(network.render_embed())[0],
+                history_cpumem=pyecharts_add(history_cpumem.render_embed())[0],
+                script_list=cpu.get_js_dependencies(),
+                serverlist_active='active',
+                server_isactive = 'active',
+                onresize=" <script>  window.onresize = function () {  %s %s  %s  %s };  </script>" % (
+                pyecharts_add(cpu.render_embed())[1], pyecharts_add(mem.render_embed())[1],
+                pyecharts_add(network.render_embed())[1], pyecharts_add(history_cpumem.render_embed())[1],)
+            )
+            return HttpResponse(template.render(context, request))
     except Exception as e:
         error = "错误,{}".format(e)
         server_list = Servers.objects.all()

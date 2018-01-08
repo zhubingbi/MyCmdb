@@ -22,10 +22,8 @@ def perm_check(request, *args, **kwargs):
                 perm_name = i.name
                 perm_str = 'Server.%s' % perm_name
                 if request.user.has_perm(perm_str):
-                    print ('===>匹配正常')
                     return True
         else:
-            print ('===>权限不能匹配')
             return False
     else:
         return False

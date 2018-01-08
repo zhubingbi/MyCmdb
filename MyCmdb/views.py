@@ -2,13 +2,10 @@
 from django.shortcuts import render_to_response
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-
-
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from Users.models import UserProfile
 from django.contrib.auth.models import User
-
 from Platform.models import Loginlog
 
 from urllib import urlopen
