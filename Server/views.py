@@ -273,6 +273,7 @@ def pyecharts_add(echa):
     ret = div + "</div>" + a[1]
     return ret, onresize
 
+
 def serverstatus(request):
     try:
         userid = request.COOKIES.get('user_id')
@@ -316,6 +317,7 @@ def serverstatus(request):
                 script_list=cpu.get_js_dependencies(),
                 serverlist_active='active',
                 server_isactive = 'active',
+                user = user,
                 onresize=" <script>  window.onresize = function () {  %s %s  %s  %s };  </script>" % (
                 pyecharts_add(cpu.render_embed())[1], pyecharts_add(mem.render_embed())[1],
                 pyecharts_add(network.render_embed())[1], pyecharts_add(history_cpumem.render_embed())[1],)
