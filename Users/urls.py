@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^listUser/', userlist),
     url(r'^modifyUser/', modifyuser),
     url(r'^modifyinput/', modifyinput),
+    url(r'^profile/', profile),
 ]

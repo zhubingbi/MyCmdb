@@ -282,47 +282,49 @@ def serverstatus(request):
         except UserProfile.DoesNotExist:
             return HttpResponseRedirect('/login')
         serverid = int(request.GET.get('serverid'))
-        all = ServerStatus.objects.all()
+
         template = loader.get_template('server/serversys.html')
         now = datetime.datetime.now()
         last_time = now+datetime.timedelta(days=-7)
+        all = ServerStatus.objects.filter(cdate__gt=last_time)
+        #all = ServerStatus.objects.all()
         date, cpu_use, mem_use, in_net, out_net = [], [], [], [], []
         serverlist_active = 'active'
         server_isactive = 'active'
         for i in all:
             if i.server_id == int(serverid):
-                date.append(i.ctime.strftime("%m-%d %H:%M"))
+                date.append(i.udate.strftime("%m-%d %H:%M"))
                 cpu_use.append(i.cpu_use)
                 mem_use.append(i.mem_use)
                 in_net.append(i.in_net)
                 out_net.append(i.out_net)
-            if cpu_use:
-                cpu_data = cpu_use[-1]
-                mem_data = mem_use[-1]
-            else:
-                cpu_data = 0
-                mem_data = 0
+        if cpu_use:
+            cpu_data = cpu_use[-1]
+            mem_data = mem_use[-1]
+        else:
+            cpu_data = 0
+            mem_data = 0
 
-            cpu = Gauge_cpumem(attr="CPU", data=cpu_data)
-            mem = Gauge_cpumem(attr="内存", data=mem_data)
-            network = Line_network(d="kb/s", title="进流量", title1="出流量", date=date, network_in=in_net,
-                                   network_put=out_net)
-            history_cpumem = Line_network(d="%", title="CPU", title1="内存", date=date, network_in=cpu_use,
-                                          network_put=mem_use)
-            context = dict(
-                cpu=pyecharts_add(cpu.render_embed())[0],
-                mem=pyecharts_add(mem.render_embed())[0],
-                network=pyecharts_add(network.render_embed())[0],
-                history_cpumem=pyecharts_add(history_cpumem.render_embed())[0],
-                script_list=cpu.get_js_dependencies(),
-                serverlist_active='active',
-                server_isactive = 'active',
-                user = user,
-                onresize=" <script>  window.onresize = function () {  %s %s  %s  %s };  </script>" % (
-                pyecharts_add(cpu.render_embed())[1], pyecharts_add(mem.render_embed())[1],
-                pyecharts_add(network.render_embed())[1], pyecharts_add(history_cpumem.render_embed())[1],)
+        cpu = Gauge_cpumem(attr="CPU", data=cpu_data)
+        mem = Gauge_cpumem(attr="内存", data=mem_data)
+        network = Line_network(d="kb/s", title="进流量", title1="出流量", date=date, network_in=in_net,
+                               network_put=out_net)
+        history_cpumem = Line_network(d="%", title="CPU", title1="内存", date=date, network_in=cpu_use,
+                                         network_put=mem_use)
+        context = dict(
+            cpu=pyecharts_add(cpu.render_embed())[0],
+            mem=pyecharts_add(mem.render_embed())[0],
+            network=pyecharts_add(network.render_embed())[0],
+            history_cpumem=pyecharts_add(history_cpumem.render_embed())[0],
+            script_list=cpu.get_js_dependencies(),
+            serverlist_active='active',
+            server_isactive='active',
+            user=user,
+            onresize=" <script>  window.onresize = function () {  %s %s  %s  %s };  </script>" % (
+            pyecharts_add(cpu.render_embed())[1], pyecharts_add(mem.render_embed())[1],
+            pyecharts_add(network.render_embed())[1], pyecharts_add(history_cpumem.render_embed())[1],)
             )
-            return HttpResponse(template.render(context, request))
+        return HttpResponse(template.render(context, request))
     except Exception as e:
         error = "错误,{}".format(e)
         server_list = Servers.objects.all()

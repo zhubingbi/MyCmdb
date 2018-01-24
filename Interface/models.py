@@ -51,7 +51,7 @@ class Interface_sys(models.Model):
         ordering = ['ctime']
 
     def __str__(self):
-        return self.server
+        return self.cpu_use
 
 
 

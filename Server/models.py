@@ -40,17 +40,17 @@ class ServerStatus(models.Model):
     out_net = models.CharField(verbose_name='出口流量', null=True, blank=True, max_length=32)
     server = models.ForeignKey(Servers, on_delete=models.CASCADE,)
 
-    ctime = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
-    utime = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    cdate = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    udate = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
         db_table = 'ServerStatus'
         verbose_name = '服务器性能监控表'
         verbose_name_plural = verbose_name
-        ordering = ['ctime']
+        ordering = ['udate']
 
     def __str__(self):
-        return self.server
+        return self.cpu_use
 
 
 class Permission(models.Model):

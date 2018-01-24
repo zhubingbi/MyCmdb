@@ -178,7 +178,6 @@ def tools_script_execute(request):
                          data1.append(data2)
 
                 ret = {'data': data1}
-
                 userid = request.COOKIES.get('user_id')
                 user = UserProfile.objects.get(id=userid)
                 tool = Toolscript.objects.get(id=shid)

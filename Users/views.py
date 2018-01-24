@@ -150,3 +150,7 @@ def modifyinput(request):
             Users.objects.filter(id=userid).update(isadmin=m_isadmin)
 
     return JsonResponse(status)
+
+
+def profile(request):
+    return render_to_response('user/profile.html', locals())
